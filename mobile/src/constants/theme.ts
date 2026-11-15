@@ -1,38 +1,42 @@
 /**
  * Circle40 design tokens. Every screen takes its colors from here, so light and
- * dark mode always match. The palette follows the clickable prototype.
+ * dark mode always match.
+ *
+ * Palette: white background with ruby red. Light mode uses a deep ruby (#9B111E)
+ * on white; dark mode uses a brighter ruby (#F0566A) so it stays readable on
+ * near-black. Every text/background pair meets WCAG AA contrast (4.5:1 or more).
  */
 import { Platform } from 'react-native';
 
 export const Colors = {
   light: {
-    background: '#EEF3F2',
+    background: '#FFFFFF',
     surface: '#FFFFFF',
-    surfaceAlt: '#E3ECEA',
-    text: '#12282A',
-    textSecondary: '#5B706F',
-    border: '#CFDCD9',
-    accent: '#0F7A6E',
+    surfaceAlt: '#FBEDEF',
+    text: '#1F1416',
+    textSecondary: '#6B5A5D',
+    border: '#EADDE0',
+    accent: '#9B111E',
     onAccent: '#FFFFFF',
-    warm: '#F0A23A',
-    warmSoft: '#FCEBD2',
-    onWarm: '#2A1A04',
+    warm: '#C2185B',
+    warmSoft: '#FCE4EA',
+    onWarm: '#FFFFFF',
     danger: '#B3261E',
-    overlay: 'rgba(5, 20, 20, 0.45)',
+    overlay: 'rgba(31, 20, 22, 0.45)',
   },
   dark: {
-    background: '#0D1A1B',
-    surface: '#152627',
-    surfaceAlt: '#1C3233',
-    text: '#E6F0EE',
-    textSecondary: '#93A9A6',
-    border: '#294546',
-    accent: '#3CC2AE',
-    onAccent: '#06201C',
-    warm: '#F4B357',
-    warmSoft: '#3A2D19',
-    onWarm: '#2A1A04',
-    danger: '#F2B8B5',
+    background: '#141012',
+    surface: '#1E181A',
+    surfaceAlt: '#2C1F23',
+    text: '#F5ECEE',
+    textSecondary: '#B8A9AD',
+    border: '#3A2E32',
+    accent: '#F0566A',
+    onAccent: '#1A0508',
+    warm: '#F48FB1',
+    warmSoft: '#3A1D26',
+    onWarm: '#1A0508',
+    danger: '#FFB4AB',
     overlay: 'rgba(0, 0, 0, 0.6)',
   },
 } as const;
@@ -41,7 +45,7 @@ export type ColorScheme = keyof typeof Colors;
 export type ThemeColors = { [K in keyof typeof Colors.light]: string };
 
 /** Avatar colors. Readable with white text on both themes. */
-export const AvatarColors = ['#0F7A6E', '#C26A1B', '#5B5FC7', '#B3416B', '#2F7FB5', '#7A8B2C', '#8A4FB0'];
+export const AvatarColors = ['#9B111E', '#B5552A', '#5B5FC7', '#AD1457', '#2F6FA5', '#6D7A2A', '#7B3FA0'];
 
 export const Spacing = {
   xs: 4,
