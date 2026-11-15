@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AvatarColors, BottomTabInset, MaxContentWidth, Radius, Spacing, Type } from '@/constants/theme';
+import { AvatarColors, BottomTabInset, MaxContentWidth, Radius, Spacing, TopTabInset, Type } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type TextVariant = keyof typeof Type;
@@ -47,7 +47,7 @@ export function Screen({
     </View>
   );
   const padding = {
-    paddingTop: tab ? insets.top + Spacing.md : Spacing.lg,
+    paddingTop: tab ? insets.top + TopTabInset + Spacing.md : Spacing.lg,
     paddingBottom: (tab ? BottomTabInset : 0) + insets.bottom + Spacing.xxl,
     paddingLeft: Math.max(Spacing.lg, insets.left),
     paddingRight: Math.max(Spacing.lg, insets.right),

@@ -5,7 +5,9 @@ import { AppText, Avatar, Card, Chip, ChipRow, DateBadge, Note, Row, Screen, Sec
 import { formatPlanDate, isMember, sortByStart } from '@/data/selectors';
 import { useAppStore } from '@/data/store';
 import { ALL_INTERESTS } from '@/data/types';
-import { useTheme } from '@/hooks/use-theme';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { useSettings } from '@/data/settings';
+import { useColorSchemeName, useTheme } from '@/hooks/use-theme';
 
 export default function MeScreen() {
   const c = useTheme();
@@ -15,6 +17,9 @@ export default function MeScreen() {
   const meetups = useAppStore((s) => s.meetupCounts);
   const blockedIds = useAppStore((s) => s.blockedIds);
   const toggleInterest = useAppStore((s) => s.toggleInterest);
+  const scheme = useColorSchemeName();
+  const pref = useSettings((s) => s.themePreference);
+  const setPref = useSettings((s) => s.setThemePreference);
 
   const mine = sortByStart(plans.filter(isMember));
   const known = Object.entries(meetups)
@@ -32,6 +37,22 @@ export default function MeScreen() {
             <AppText variant="small" muted>{me.area} · Looking for friends to go out with</AppText>
           </View>
         </View>
+      </Card>
+
+      <Card>
+        <Row>
+          <View style={styles.flex}>
+            <AppText variant="bodyStrong">Dark mode</AppText>
+            <AppText variant="small" muted>
+              {pref === 'system' ? `Matching your phone (${scheme})` : scheme === 'dark' ? 'On' : 'Off'}
+            </AppText>
+          </View>
+          <ThemeToggle dark={scheme === 'dark'} onChange={(dark) => setPref(dark ? 'dark' : 'light')} />
+        </Row>
+        <Row>
+          <AppText variant="small" muted style={styles.flex}>Follow your phone’s light/dark setting</AppText>
+          <Chip label={pref === 'system' ? 'Matching phone ✓' : 'Match phone'} selected={pref === 'system'} onPress={() => setPref('system')} />
+        </Row>
       </Card>
 
       <SectionTitle hint="Tap to change. The People tab updates its matches.">Your interests</SectionTitle>

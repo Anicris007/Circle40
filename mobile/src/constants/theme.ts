@@ -44,6 +44,22 @@ export const Colors = {
 export type ColorScheme = keyof typeof Colors;
 export type ThemeColors = { [K in keyof typeof Colors.light]: string };
 
+/**
+ * Day/night toggle colors. Fixed (not per theme) because the toggle animates
+ * between them while the rest of the app switches theme.
+ */
+export const ToggleColors = {
+  dayTrack: '#FCE4EA',
+  dayBorder: '#EBC3CD',
+  nightTrack: '#2A0A10',
+  nightBorder: '#5A1A26',
+  dayKnob: '#FFFFFF',
+  nightKnob: '#F5ECEE',
+  sun: '#C2185B',
+  moon: '#9B111E',
+  star: '#FCE4EA',
+};
+
 /** Avatar colors. Readable with white text on both themes. */
 export const AvatarColors = ['#9B111E', '#B5552A', '#5B5FC7', '#AD1457', '#2F6FA5', '#6D7A2A', '#7B3FA0'];
 
@@ -74,4 +90,6 @@ export const Type = {
 
 /** Space to leave under scrolling content so the tab bar never covers it. */
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
+/** On web the tab bar sits at the top (it ends 64px down), so tab screens start below it. */
+export const TopTabInset = Platform.select({ web: 64 }) ?? 0;
 export const MaxContentWidth = 640;
