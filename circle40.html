@@ -5,20 +5,21 @@
 <style>
 /* Layout: concept notes on the left, a working phone prototype on the right; stacks on phones. */
 :root{
-  --bg:#EEF3F2; --surface:#FFFFFF; --surface-2:#E3ECEA; --ink:#12282A; --muted:#5B706F;
-  --line:#CFDCD9; --accent:#0F7A6E; --accent-ink:#FFFFFF; --warm:#F0A23A; --warm-soft:#FCEBD2;
+  /* Same palette as the app (mobile/src/constants/theme.ts): white with ruby red. */
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#FBEDEF; --ink:#1F1416; --muted:#6B5A5D;
+  --line:#EADDE0; --accent:#9B111E; --accent-ink:#FFFFFF; --warm:#C2185B; --warm-soft:#FCE4EA; --warm-ink:#FFFFFF;
   --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body:"Figtree", "Segoe UI", system-ui, sans-serif;
-  --phone-frame:#12282A;
+  --phone-frame:#1F1416; --overlay:rgba(31,20,22,.45); --shadow:rgba(60,10,16,.35);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0D1A1B; --surface:#152627; --surface-2:#1C3233; --ink:#E6F0EE; --muted:#93A9A6;
-  --line:#294546; --accent:#3CC2AE; --accent-ink:#06201C; --warm:#F4B357; --warm-soft:#3A2D19;
-  --phone-frame:#020909; color-scheme:dark}}
+  --bg:#141012; --surface:#1E181A; --surface-2:#2C1F23; --ink:#F5ECEE; --muted:#B8A9AD;
+  --line:#3A2E32; --accent:#F0566A; --accent-ink:#1A0508; --warm:#F48FB1; --warm-soft:#3A1D26; --warm-ink:#1A0508;
+  --phone-frame:#050304; --overlay:rgba(0,0,0,.6); --shadow:rgba(0,0,0,.6); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0D1A1B; --surface:#152627; --surface-2:#1C3233; --ink:#E6F0EE; --muted:#93A9A6;
-  --line:#294546; --accent:#3CC2AE; --accent-ink:#06201C; --warm:#F4B357; --warm-soft:#3A2D19;
-  --phone-frame:#020909; color-scheme:dark}
+  --bg:#141012; --surface:#1E181A; --surface-2:#2C1F23; --ink:#F5ECEE; --muted:#B8A9AD;
+  --line:#3A2E32; --accent:#F0566A; --accent-ink:#1A0508; --warm:#F48FB1; --warm-soft:#3A1D26; --warm-ink:#1A0508;
+  --phone-frame:#050304; --overlay:rgba(0,0,0,.6); --shadow:rgba(0,0,0,.6); color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -42,7 +43,7 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
 .rules strong{color:var(--ink)}
 
 /* Phone */
-.phone{width:100%;max-width:390px;margin:0 auto;background:var(--phone-frame);border-radius:44px;padding:10px;box-shadow:0 30px 60px -30px rgba(10,40,40,.45);position:sticky;top:calc(20px + env(safe-area-inset-top,0px))}
+.phone{width:100%;max-width:390px;margin:0 auto;background:var(--phone-frame);border-radius:44px;padding:10px;box-shadow:0 30px 60px -30px var(--shadow);position:sticky;top:calc(20px + env(safe-area-inset-top,0px))}
 @media (max-width:880px){.phone{position:static}}
 .screen{background:var(--bg);border-radius:35px;overflow:hidden;height:760px;max-height:calc(100vh - 60px);min-height:600px;display:flex;flex-direction:column;position:relative}
 .topbar{padding:18px 20px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -73,12 +74,12 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
 .verified{font-size:11px;font-weight:700;color:var(--accent)}
 .note{font-size:12.5px;color:var(--muted);background:var(--surface-2);border-radius:12px;padding:10px 12px}
-.fab{position:absolute;right:18px;bottom:84px;background:var(--warm);color:#2A1A04;border:0;border-radius:999px;padding:12px 18px;font:700 14px var(--body);cursor:pointer;box-shadow:0 8px 20px -8px rgba(0,0,0,.4)}
+.fab{position:absolute;right:18px;bottom:84px;background:var(--warm);color:var(--warm-ink);border:0;border-radius:999px;padding:12px 18px;font:700 14px var(--body);cursor:pointer;box-shadow:0 8px 20px -8px rgba(0,0,0,.4)}
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--surface);padding:8px 6px 14px;flex:none}
 .tab{background:none;border:0;color:var(--muted);font:600 11.5px var(--body);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px;border-radius:10px}
 .tab svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tab[aria-selected="true"]{color:var(--accent)}
-.badge{background:var(--warm);color:#2A1A04;border-radius:999px;font-size:10px;padding:0 5px;margin-left:2px}
+.badge{background:var(--warm);color:var(--warm-ink);border-radius:999px;font-size:10px;padding:0 5px;margin-left:2px}
 /* Chat */
 .thread{display:flex;flex-direction:column;gap:8px;flex:1}
 .bubble{max-width:78%;padding:9px 12px;border-radius:16px;font-size:14px;background:var(--surface);border:1px solid var(--line);align-self:flex-start}
@@ -92,7 +93,7 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
 .list-item .grow p{margin:0;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-size:13px;font-weight:600;padding:9px 14px;border-radius:999px;white-space:nowrap}
 /* Sheet */
-.sheet{position:absolute;inset:0;background:rgba(5,20,20,.45);display:flex;align-items:flex-end}
+.sheet{position:absolute;inset:0;background:var(--overlay);display:flex;align-items:flex-end}
 .sheet-body{background:var(--surface);width:100%;border-radius:24px 24px 0 0;padding:18px 18px 22px;display:flex;flex-direction:column;gap:12px}
 .sheet-body label{font-size:12px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;gap:5px}
 .sheet-body input,.sheet-body select{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:10px 12px;font:14px var(--body)}
@@ -151,7 +152,7 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
 </div>
 
 <script>
-const COLORS=["#0F7A6E","#C26A1B","#5B5FC7","#B3416B","#2F7FB5","#7A8B2C","#8A4FB0"];
+const COLORS=["#9B111E","#B5552A","#5B5FC7","#AD1457","#2F6FA5","#6D7A2A","#7B3FA0"];
 const people=[
  {id:"r",name:"Riya",age:29,area:"Baner",bio:"Sister got married in March, last single friend in March too. Looking for brunch and bookshop people.",tags:["Books","Brunch","Pottery"],c:0,match:92},
  {id:"k",name:"Karan",age:31,area:"Kothrud",bio:"Weekend trekker. My trek group turned into a couples' group. Need new trail buddies.",tags:["Trekking","Cycling","Chai"],c:1,match:87},
