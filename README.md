@@ -19,3 +19,7 @@ A friendship app for single adults whose friends have married and who want peopl
 ## Contributing
 
 `main` is protected: every change goes through a branch and a pull request. See [CLAUDE.md](CLAUDE.md) for the workflow.
+
+Every pull request runs [CI](.github/workflows/ci.yml) on GitHub Actions:
+- **App checks:** typecheck, lint, unit tests and an Android bundle of `mobile/`
+- **Database schema:** every file in `supabase/migrations/` is parsed with Postgres's own SQL parser

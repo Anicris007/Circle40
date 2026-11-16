@@ -10,5 +10,6 @@ A friendship app for single adults whose friends have married and who want peopl
 2. Commit on that branch. Push only that branch: `git push -u origin <branch>`.
 3. Open a pull request into main with `gh pr create`, with a clear title and a summary of what changed and how it was checked.
 4. Do not merge the pull request. The repo owner reviews and merges it.
+5. CI (`.github/workflows/ci.yml`) runs "App checks" and "Database schema" on every PR. Run the same checks locally first (`npm run typecheck`, `npm run lint`, `npm test` in `mobile/`), and fix a red CI run before asking for review.
 
 A PreToolUse hook (`.claude/hooks/block-main-push.ps1`) blocks `git push` to main and `gh pr merge`. Do not work around it.
