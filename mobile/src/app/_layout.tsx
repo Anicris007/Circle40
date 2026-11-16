@@ -1,5 +1,6 @@
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { Colors } from '@/constants/theme';
 import { useColorSchemeName } from '@/hooks/use-theme';
@@ -22,6 +23,8 @@ export default function RootLayout() {
   };
 
   return (
+    // KeyboardProvider tracks the keyboard on both platforms, so forms and chats can move above it.
+    <KeyboardProvider>
     <ThemeProvider value={navTheme}>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       <Stack
@@ -39,5 +42,6 @@ export default function RootLayout() {
         <Stack.Screen name="report" options={{ title: 'Report', presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
+    </KeyboardProvider>
   );
 }

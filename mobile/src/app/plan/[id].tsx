@@ -1,6 +1,7 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { Composer, MessageBubble } from '@/components/chat';
 import {
@@ -40,10 +41,8 @@ export default function PlanScreen() {
   const full = isFull(plan) && !going;
 
   return (
-    <KeyboardAvoidingView
-      style={styles.fill}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
+    // Pushes the group-chat message box above the keyboard on iOS and Android.
+    <KeyboardAvoidingView style={styles.fill} behavior="padding" automaticOffset>
       <Stack.Screen options={{ title: plan.category }} />
       <Screen>
         <Card>

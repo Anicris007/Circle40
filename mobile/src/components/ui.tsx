@@ -7,6 +7,7 @@ import {
   Pressable, ScrollView, StyleSheet, Text, View,
   type PressableProps, type StyleProp, type TextProps, type TextStyle, type ViewStyle,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AvatarColors, BottomTabInset, MaxContentWidth, Radius, Spacing, TopTabInset, Type } from '@/constants/theme';
@@ -26,7 +27,11 @@ export function AppText({
   );
 }
 
-/** Scrolling page body. `tab` adds room for the status bar and tab bar. */
+/**
+ * Scrolling page body. `tab` adds room for the status bar and tab bar.
+ * When a text field inside is focused, the page scrolls so the field sits just
+ * above the keyboard (iOS and Android).
+ */
 export function Screen({
   title, right, children, tab, scroll = true, contentStyle,
 }: {
@@ -56,12 +61,13 @@ export function Screen({
     return <View style={[styles.fill, { backgroundColor: c.background }, padding]}>{inner}</View>;
   }
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       style={[styles.fill, { backgroundColor: c.background }]}
       contentContainerStyle={padding}
+      bottomOffset={Spacing.xl}
       keyboardShouldPersistTaps="handled">
       {inner}
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
 
