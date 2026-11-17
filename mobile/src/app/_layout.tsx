@@ -40,6 +40,7 @@ export default function RootLayout() {
         <Stack.Screen name="chat/[id]" options={{ title: 'Chat' }} />
         <Stack.Screen name="new-plan" options={{ title: 'Post a plan', presentation: 'modal' }} />
         <Stack.Screen name="report" options={{ title: 'Report', presentation: 'modal' }} />
+        <Stack.Screen name="edit-profile" options={{ title: 'Edit profile', presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
     </KeyboardProvider>

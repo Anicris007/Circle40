@@ -20,6 +20,9 @@ export interface NewPlanInput {
   womenOnly: boolean;
 }
 
+/** The profile fields a person can edit on the Edit profile screen. */
+export type ProfileEdit = Pick<Profile, 'name' | 'age' | 'area' | 'bio'>;
+
 export interface AppState {
   me: Profile;
   people: Profile[];
@@ -39,6 +42,7 @@ export interface AppState {
   receiveDirectMessage: (personId: string, body: string) => void;
   markChatRead: (personId: string) => void;
   toggleInterest: (interest: string) => void;
+  updateProfile: (changes: ProfileEdit) => void;
   report: (targetType: Report['targetType'], targetId: string, reason: ReportReason) => void;
   block: (personId: string) => void;
   reset: () => void;
@@ -143,6 +147,17 @@ export const useAppStore = create<AppState>()((set, get) => ({
         },
       };
     }),
+
+  updateProfile: (changes) =>
+    set((s) => ({
+      me: {
+        ...s.me,
+        name: changes.name.trim(),
+        age: changes.age,
+        area: changes.area.trim(),
+        bio: changes.bio.trim(),
+      },
+    })),
 
   report: (targetType, targetId, reason) =>
     set((s) => ({

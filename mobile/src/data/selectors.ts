@@ -46,6 +46,68 @@ export function formatPlanDate(iso: string) {
   };
 }
 
+export interface ProfileStats {
+  plansJoined: number;
+  plansHosted: number;
+  peopleMet: number;
+  regulars: number;
+}
+
+/** Counts shown in the Me page header. Regulars are people met at least twice. */
+export function profileStats(
+  plans: Plan[], meetupCounts: Record<string, number>, blockedIds: string[] = [],
+): ProfileStats {
+  const met = Object.entries(meetupCounts).filter(([id, n]) => n > 0 && !blockedIds.includes(id));
+  return {
+    plansJoined: plans.filter((p) => isMember(p) && !isHost(p)).length,
+    plansHosted: plans.filter(isHost).length,
+    peopleMet: met.length,
+    regulars: met.filter(([, n]) => n >= 2).length,
+  };
+}
+
+export interface Badge {
+  id: 'verified' | 'host' | 'regular' | 'explorer';
+  label: string;
+  /** How to earn it, shown while it's still locked. */
+  howTo: string;
+  earned: boolean;
+}
+
+/** Badges are derived from real activity, so they can't be faked in the UI. */
+export function profileBadges(me: Profile, stats: ProfileStats): Badge[] {
+  return [
+    { id: 'verified', label: 'ID verified', howTo: 'Verify your ID', earned: me.verified },
+    { id: 'host', label: 'Host', howTo: 'Host your first plan', earned: stats.plansHosted >= 1 },
+    { id: 'regular', label: 'Has regulars', howTo: 'Meet someone twice', earned: stats.regulars >= 1 },
+    { id: 'explorer', label: 'Explorer', howTo: 'Join 3 plans', earned: stats.plansJoined >= 3 },
+  ];
+}
+
+export interface ProfileErrors {
+  name?: string;
+  age?: string;
+  area?: string;
+  bio?: string;
+}
+
+export const BIO_MAX = 400;
+
+/** Validation for the Edit profile form. Mirrors the limits in the database schema. */
+export function validateProfile(input: { name: string; age: string; area: string; bio: string }): ProfileErrors {
+  const errors: ProfileErrors = {};
+  const name = input.name.trim();
+  if (name.length < 1) errors.name = 'Add your first name.';
+  else if (name.length > 40) errors.name = 'Keep your name under 40 characters.';
+  const age = Number(input.age);
+  if (!/^\d{1,3}$/.test(input.age.trim()) || !Number.isInteger(age)) errors.age = 'Enter your age as a number.';
+  else if (age < 18) errors.age = 'Circle40 is for adults 18 and over.';
+  else if (age > 99) errors.age = 'Enter an age under 100.';
+  if (input.area.trim().length < 2) errors.area = 'Add your neighbourhood, for example Baner.';
+  if (input.bio.trim().length > BIO_MAX) errors.bio = `Keep your bio under ${BIO_MAX} characters.`;
+  return errors;
+}
+
 /** Accepts 24-hour "HH:MM" and returns it zero-padded, or null if invalid. */
 export function parseTime(input: string): string | null {
   const m = /^(\d{1,2}):(\d{2})$/.exec(input.trim());

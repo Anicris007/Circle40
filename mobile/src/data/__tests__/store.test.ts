@@ -86,6 +86,14 @@ describe('safety', () => {
 });
 
 describe('profile', () => {
+  it('updates name, age, area and bio, trimming spaces', () => {
+    state().updateProfile({ name: '  Asha ', age: 33, area: ' Aundh ', bio: ' Loves treks. ' });
+    expect(state().me).toMatchObject({ name: 'Asha', age: 33, area: 'Aundh', bio: 'Loves treks.' });
+    // Other fields are untouched.
+    expect(state().me.interests).toEqual(['Movies', 'Brunch', 'Trekking', 'Books']);
+    expect(state().me.verified).toBe(true);
+  });
+
   it('toggles an interest on and off', () => {
     expect(state().me.interests).not.toContain('Chai');
     state().toggleInterest('Chai');

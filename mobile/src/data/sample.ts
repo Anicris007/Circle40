@@ -7,10 +7,10 @@ import { ME_ID } from './types';
 
 export const sampleMe: Profile = {
   id: ME_ID,
-  name: 'You',
+  name: 'Neha',
   age: 30,
   area: 'Baner',
-  bio: 'Looking for friends to go out with.',
+  bio: 'Most of my friends got married this year. Looking for people to try new cafés and weekend treks with.',
   interests: ['Movies', 'Brunch', 'Trekking', 'Books'],
   verified: true,
   colorIndex: 5,
