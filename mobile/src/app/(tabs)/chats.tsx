@@ -22,7 +22,7 @@ export default function ChatsScreen() {
             onPress={() => router.push({ pathname: '/chat/[id]', params: { id: chat.personId } })}
             accessibilityLabel={`Chat with ${person.name}${chat.unread ? ', new message' : ''}`}
             style={styles.item}>
-            <Avatar name={person.name} colorIndex={person.colorIndex} size={48} />
+            <Avatar name={person.name} colorIndex={person.colorIndex} size={48} photoUri={person.photoUri} />
             <View style={styles.text}>
               <View style={styles.nameRow}>
                 <AppText variant="bodyStrong">{person.name}</AppText>

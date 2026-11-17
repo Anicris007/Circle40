@@ -2,18 +2,28 @@
  * Example data for milestone 1. These people and plans are made up and only
  * exist on the device. Milestone 2 replaces them with Supabase queries.
  */
-import type { DirectChat, Message, Plan, Profile } from './types';
+import type { Account, DirectChat, Message, Plan, Profile } from './types';
 import { ME_ID } from './types';
 
 export const sampleMe: Profile = {
   id: ME_ID,
-  name: 'You',
+  name: 'Neha',
+  lastName: 'Sharma',
+  status: 'Free this weekend for brunch or a trek',
   age: 30,
   area: 'Baner',
-  bio: 'Looking for friends to go out with.',
+  bio: 'Most of my friends got married this year. Looking for people to try new cafés and weekend treks with.',
   interests: ['Movies', 'Brunch', 'Trekking', 'Books'],
   verified: true,
   colorIndex: 5,
+};
+
+/** Made-up sign-in details (example.com is a reserved test domain). Real values come from sign-in in milestone 2. */
+export const sampleAccount: Account = {
+  phone: '+91 98765 43210',
+  phoneVerified: true,
+  email: 'neha.sharma@example.com',
+  emailVerified: false,
 };
 
 export const samplePeople: Profile[] = [

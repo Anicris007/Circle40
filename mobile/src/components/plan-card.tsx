@@ -39,7 +39,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
       </Pressable>
       <Row>
         <View style={styles.host}>
-          {host ? <Avatar name={host.name} colorIndex={host.colorIndex} size={28} /> : null}
+          {host ? <Avatar name={host.name} colorIndex={host.colorIndex} size={28} photoUri={host.photoUri} /> : null}
           <AppText variant="small" style={styles.hostText} numberOfLines={1}>
             Hosted by <AppText variant="small" style={styles.bold}>{mine ? 'you' : host?.name}</AppText>
           </AppText>

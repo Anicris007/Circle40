@@ -2,6 +2,7 @@
  * Shared building blocks. Every color comes from useTheme(), so each piece
  * works in light and dark mode without extra code in the screens.
  */
+import { Image } from 'expo-image';
 import type { ReactNode } from 'react';
 import {
   Pressable, ScrollView, StyleSheet, Text, View,
@@ -161,9 +162,22 @@ export function TagRow({ children }: { children: ReactNode }) {
   return <View style={styles.tagRow}>{children}</View>;
 }
 
-export function Avatar({ name, colorIndex, size = 36 }: { name: string; colorIndex: number; size?: number }) {
+export function Avatar({ name, colorIndex, size = 36, photoUri }: {
+  name: string; colorIndex: number; size?: number; photoUri?: string;
+}) {
   const c = useTheme();
   const isOpen = colorIndex < 0;
+  if (photoUri) {
+    return (
+      <Image
+        source={{ uri: photoUri }}
+        style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: c.surfaceAlt }}
+        contentFit="cover"
+        accessibilityIgnoresInvertColors
+        accessible={false}
+      />
+    );
+  }
   return (
     <View
       accessible={false}

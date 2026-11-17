@@ -86,6 +86,36 @@ describe('safety', () => {
 });
 
 describe('profile', () => {
+  it('updates name, age, area and bio, trimming spaces', () => {
+    state().updateProfile({ name: '  Asha ', lastName: ' Rao ', status: ' Up for brunch ', age: 33, area: ' Aundh ', bio: ' Loves treks. ' });
+    expect(state().me).toMatchObject({
+      name: 'Asha', lastName: 'Rao', status: 'Up for brunch', age: 33, area: 'Aundh', bio: 'Loves treks.',
+    });
+    // Other fields are untouched.
+    expect(state().me.interests).toEqual(['Movies', 'Brunch', 'Trekking', 'Books']);
+    expect(state().me.verified).toBe(true);
+  });
+
+  it('clears an emptied last name or status instead of saving blanks', () => {
+    state().updateProfile({ name: 'Neha', lastName: '   ', status: '', age: 30, area: 'Baner', bio: '' });
+    expect(state().me.lastName).toBeUndefined();
+    expect(state().me.status).toBeUndefined();
+  });
+
+  it('sets and removes the profile photo', () => {
+    state().setPhoto('file:///photo.jpg');
+    expect(state().me.photoUri).toBe('file:///photo.jpg');
+    state().setPhoto(undefined);
+    expect(state().me.photoUri).toBeUndefined();
+  });
+
+  it('keeps sign-in details apart from editable profile fields', () => {
+    const before = { ...state().account };
+    state().updateProfile({ name: 'Asha', age: 33, area: 'Aundh', bio: '' });
+    expect(state().account).toEqual(before);
+    expect(state().account.phoneVerified).toBe(true);
+  });
+
   it('toggles an interest on and off', () => {
     expect(state().me.interests).not.toContain('Chai');
     state().toggleInterest('Chai');

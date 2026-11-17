@@ -60,7 +60,7 @@ export default function PlanScreen() {
           </TagRow>
           {host ? (
             <View style={styles.host}>
-              <Avatar name={host.name} colorIndex={host.colorIndex} />
+              <Avatar name={host.name} colorIndex={host.colorIndex} photoUri={host.photoUri} />
               <View style={styles.flex}>
                 <AppText variant="bodyStrong">{mine ? 'You are hosting' : `${host.name} is hosting`}</AppText>
                 <AppText variant="small" muted>
@@ -86,7 +86,7 @@ export default function PlanScreen() {
             if (!p) return null;
             return (
               <View key={pid} style={styles.member}>
-                <Avatar name={p.name} colorIndex={p.colorIndex} size={30} />
+                <Avatar name={p.name} colorIndex={p.colorIndex} size={30} photoUri={p.photoUri} />
                 <AppText variant="small">{pid === ME_ID ? 'You' : `${p.name}, ${p.age}`}</AppText>
               </View>
             );
