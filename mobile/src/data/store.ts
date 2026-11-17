@@ -6,9 +6,9 @@
 import { create } from 'zustand';
 
 import {
-  sampleDirectChats, sampleGroupChats, sampleMe, sampleMeetupCounts, samplePeople, samplePlans,
+  sampleAccount, sampleDirectChats, sampleGroupChats, sampleMe, sampleMeetupCounts, samplePeople, samplePlans,
 } from './sample';
-import type { DirectChat, Message, Plan, PlanCategory, Profile, Report, ReportReason } from './types';
+import type { Account, DirectChat, Message, Plan, PlanCategory, Profile, Report, ReportReason } from './types';
 import { ME_ID } from './types';
 
 export interface NewPlanInput {
@@ -21,10 +21,11 @@ export interface NewPlanInput {
 }
 
 /** The profile fields a person can edit on the Edit profile screen. */
-export type ProfileEdit = Pick<Profile, 'name' | 'age' | 'area' | 'bio'>;
+export type ProfileEdit = Pick<Profile, 'name' | 'lastName' | 'status' | 'age' | 'area' | 'bio'>;
 
 export interface AppState {
   me: Profile;
+  account: Account;
   people: Profile[];
   plans: Plan[];
   groupChats: Record<string, Message[]>;
@@ -43,6 +44,8 @@ export interface AppState {
   markChatRead: (personId: string) => void;
   toggleInterest: (interest: string) => void;
   updateProfile: (changes: ProfileEdit) => void;
+  /** Pass undefined to remove the photo. */
+  setPhoto: (uri: string | undefined) => void;
   report: (targetType: Report['targetType'], targetId: string, reason: ReportReason) => void;
   block: (personId: string) => void;
   reset: () => void;
@@ -54,6 +57,7 @@ const now = () => new Date().toISOString();
 
 const initialData = () => ({
   me: { ...sampleMe, interests: [...sampleMe.interests] },
+  account: { ...sampleAccount },
   people: samplePeople.map((p) => ({ ...p, interests: [...p.interests] })),
   plans: samplePlans.map((p) => ({ ...p, memberIds: [...p.memberIds] })),
   groupChats: Object.fromEntries(Object.entries(sampleGroupChats).map(([k, v]) => [k, [...v]])),
@@ -153,11 +157,15 @@ export const useAppStore = create<AppState>()((set, get) => ({
       me: {
         ...s.me,
         name: changes.name.trim(),
+        lastName: changes.lastName?.trim() || undefined,
+        status: changes.status?.trim() || undefined,
         age: changes.age,
         area: changes.area.trim(),
         bio: changes.bio.trim(),
       },
     })),
+
+  setPhoto: (uri) => set((s) => ({ me: { ...s.me, photoUri: uri } })),
 
   report: (targetType, targetId, reason) =>
     set((s) => ({

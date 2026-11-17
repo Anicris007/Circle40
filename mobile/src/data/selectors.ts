@@ -86,19 +86,32 @@ export function profileBadges(me: Profile, stats: ProfileStats): Badge[] {
 
 export interface ProfileErrors {
   name?: string;
+  lastName?: string;
+  status?: string;
   age?: string;
   area?: string;
   bio?: string;
 }
 
 export const BIO_MAX = 400;
+export const STATUS_MAX = 60;
+export const NAME_MAX = 40;
+
+/** "Neha Sharma", or just the first name when there's no last name. */
+export function fullName(p: Pick<Profile, 'name' | 'lastName'>): string {
+  return [p.name, p.lastName].filter(Boolean).join(' ');
+}
 
 /** Validation for the Edit profile form. Mirrors the limits in the database schema. */
-export function validateProfile(input: { name: string; age: string; area: string; bio: string }): ProfileErrors {
+export function validateProfile(input: {
+  name: string; lastName?: string; status?: string; age: string; area: string; bio: string;
+}): ProfileErrors {
   const errors: ProfileErrors = {};
   const name = input.name.trim();
   if (name.length < 1) errors.name = 'Add your first name.';
-  else if (name.length > 40) errors.name = 'Keep your name under 40 characters.';
+  else if (name.length > NAME_MAX) errors.name = `Keep your first name under ${NAME_MAX} characters.`;
+  if ((input.lastName ?? '').trim().length > NAME_MAX) errors.lastName = `Keep your last name under ${NAME_MAX} characters.`;
+  if ((input.status ?? '').trim().length > STATUS_MAX) errors.status = `Keep your status under ${STATUS_MAX} characters.`;
   const age = Number(input.age);
   if (!/^\d{1,3}$/.test(input.age.trim()) || !Number.isInteger(age)) errors.age = 'Enter your age as a number.';
   else if (age < 18) errors.age = 'Circle40 is for adults 18 and over.';

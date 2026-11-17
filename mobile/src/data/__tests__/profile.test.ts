@@ -1,7 +1,9 @@
 import { describe, expect, it } from '@jest/globals';
 
 import { sampleMe } from '../sample';
-import { BIO_MAX, profileBadges, profileStats, validateProfile } from '../selectors';
+import {
+  BIO_MAX, NAME_MAX, STATUS_MAX, fullName, profileBadges, profileStats, validateProfile,
+} from '../selectors';
 import type { Plan } from '../types';
 import { ME_ID } from '../types';
 
@@ -44,6 +46,14 @@ describe('profileBadges', () => {
   });
 });
 
+describe('fullName', () => {
+  it('joins first and last name, or shows just the first', () => {
+    expect(fullName({ name: 'Neha', lastName: 'Sharma' })).toBe('Neha Sharma');
+    expect(fullName({ name: 'Neha' })).toBe('Neha');
+    expect(fullName({ name: 'Neha', lastName: '' })).toBe('Neha');
+  });
+});
+
 describe('validateProfile', () => {
   const ok = { name: 'Neha', age: '30', area: 'Baner', bio: 'Hi' };
 
@@ -62,6 +72,13 @@ describe('validateProfile', () => {
     expect(validateProfile({ ...ok, age: 'abc' }).age).toBeDefined();
     expect(validateProfile({ ...ok, age: '25.5' }).age).toBeDefined();
     expect(validateProfile({ ...ok, age: '120' }).age).toBeDefined();
+  });
+
+  it('allows an empty last name and status, but limits their length', () => {
+    expect(validateProfile({ ...ok, lastName: '', status: '' })).toEqual({});
+    expect(validateProfile({ ...ok, lastName: 'x'.repeat(NAME_MAX + 1) }).lastName).toBeDefined();
+    expect(validateProfile({ ...ok, status: 'x'.repeat(STATUS_MAX) }).status).toBeUndefined();
+    expect(validateProfile({ ...ok, status: 'x'.repeat(STATUS_MAX + 1) }).status).toBeDefined();
   });
 
   it('requires an area and limits the bio length', () => {

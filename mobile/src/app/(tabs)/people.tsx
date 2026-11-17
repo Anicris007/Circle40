@@ -40,7 +40,7 @@ export default function PeopleScreen() {
           <Card key={person.id}>
             <Row>
               <View style={styles.who}>
-                <Avatar name={person.name} colorIndex={person.colorIndex} size={52} />
+                <Avatar name={person.name} colorIndex={person.colorIndex} size={52} photoUri={person.photoUri} />
                 <View style={styles.whoText}>
                   <AppText variant="heading">{person.name}, {person.age}</AppText>
                   <AppText variant="small" muted>

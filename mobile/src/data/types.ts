@@ -16,7 +16,13 @@ export const ME_ID = 'me';
 
 export interface Profile {
   id: string;
+  /** First name. Other people see this, plus the last initial. */
   name: string;
+  lastName?: string;
+  /** Short line under the name, e.g. "Free this weekend". */
+  status?: string;
+  /** Local image URI from the photo picker. Uploaded to storage in milestone 2. */
+  photoUri?: string;
   age: number;
   area: string;
   bio: string;
@@ -24,6 +30,25 @@ export interface Profile {
   verified: boolean;
   colorIndex: number;
 }
+
+/**
+ * Sign-in details for the current user. Read-only in the app: they come from
+ * phone sign-in (and email) and can only change through a verified flow.
+ */
+export interface Account {
+  phone: string;
+  phoneVerified: boolean;
+  email: string;
+  emailVerified: boolean;
+}
+
+export const STATUS_SUGGESTIONS = [
+  'Free this weekend',
+  'Up for brunch',
+  'Looking for trek buddies',
+  'New in town',
+  'Weeknights work best',
+];
 
 export interface Plan {
   id: string;

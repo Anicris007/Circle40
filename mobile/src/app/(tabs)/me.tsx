@@ -1,14 +1,16 @@
 import { router } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
+import { CameraIcon, PenIcon } from '@/components/icons';
 import { ThemeToggle } from '@/components/theme-toggle';
 import {
-  AppText, Avatar, Button, Card, Chip, ChipRow, DateBadge, Note, Row, Screen, SectionTitle,
+  AppText, Avatar, Card, Chip, ChipRow, DateBadge, Note, Row, Screen, SectionTitle,
 } from '@/components/ui';
 import { Radius, Spacing } from '@/constants/theme';
 import {
-  formatPlanDate, isMember, profileBadges, profileStats, sortByStart, type Badge,
+  formatPlanDate, fullName, isMember, profileBadges, profileStats, sortByStart, type Badge,
 } from '@/data/selectors';
+import { usePhotoPicker } from '@/hooks/use-photo-picker';
 import { useSettings } from '@/data/settings';
 import { useAppStore } from '@/data/store';
 import { ALL_INTERESTS } from '@/data/types';
@@ -25,6 +27,7 @@ export default function MeScreen() {
   const scheme = useColorSchemeName();
   const pref = useSettings((s) => s.themePreference);
   const setPref = useSettings((s) => s.setThemePreference);
+  const { pickPhoto, error: photoError } = usePhotoPicker();
 
   const stats = profileStats(plans, meetups, blockedIds);
   const badges = profileBadges(me, stats);
@@ -38,23 +41,50 @@ export default function MeScreen() {
 
   return (
     <Screen tab title="Me">
-      {/* Profile header */}
-      <Card style={styles.header}>
+      {/* Profile header: no card border, so it reads as the top of the page */}
+      <View style={styles.header}>
         <View style={styles.headerTop}>
-          <Avatar name={me.name} colorIndex={me.colorIndex} size={72} />
+          <Pressable
+            onPress={() => router.push('/edit-profile')}
+            accessibilityRole="button"
+            accessibilityLabel="Edit profile"
+            hitSlop={8}
+            style={({ pressed }) => [
+              styles.penButton,
+              { borderColor: c.accent, backgroundColor: c.surface },
+              pressed && { opacity: 0.7 },
+            ]}>
+            <PenIcon color={c.accent} size={18} />
+          </Pressable>
+          <Pressable
+            onPress={pickPhoto}
+            accessibilityRole="button"
+            accessibilityLabel={me.photoUri ? 'Change profile photo' : 'Add profile photo'}
+            style={({ pressed }) => [pressed && { opacity: 0.85 }]}>
+            <Avatar name={me.name} colorIndex={me.colorIndex} size={84} photoUri={me.photoUri} />
+            <View style={[styles.cameraBadge, { backgroundColor: c.accent, borderColor: c.background }]}>
+              <CameraIcon color={c.onAccent} background={c.accent} size={14} />
+            </View>
+          </Pressable>
           <View style={styles.flex}>
-            <AppText variant="title" style={styles.name}>{me.name}, {me.age}</AppText>
-            <AppText variant="small" muted>{me.area}</AppText>
-            {me.verified ? (
-              <View style={[styles.verified, { backgroundColor: c.surfaceAlt }]}>
-                <AppText variant="small" color={c.accent} style={styles.bold}>✓ ID verified</AppText>
-              </View>
-            ) : null}
+            <AppText variant="title" style={styles.name}>{fullName(me)}</AppText>
+            {me.status ? (
+              <AppText variant="bodyStrong" color={c.accent} numberOfLines={2}>{me.status}</AppText>
+            ) : (
+              <AppText variant="small" muted>Add a status so people know when you’re free</AppText>
+            )}
+            <AppText variant="small" muted>{me.age} · {me.area}</AppText>
           </View>
         </View>
+        {photoError ? <AppText variant="small" color={c.danger}>{photoError}</AppText> : null}
+        {me.verified ? (
+          <View style={[styles.verified, { backgroundColor: c.surfaceAlt }]}>
+            <AppText variant="small" color={c.accent} style={styles.bold}>✓ ID verified</AppText>
+          </View>
+        ) : null}
         {me.bio ? <AppText>{me.bio}</AppText> : <AppText muted>Add a line about yourself so people know what plans you enjoy.</AppText>}
-        <Button kind="ghost" small label="Edit profile" onPress={() => router.push('/edit-profile')} style={styles.editButton} />
-      </Card>
+      </View>
+      <View style={[styles.divider, { backgroundColor: c.border }]} />
 
       {/* Stats */}
       <View style={styles.stats} accessibilityRole="summary">
@@ -129,7 +159,7 @@ export default function MeScreen() {
       <SectionTitle hint="People you’ve met at least twice. They see your new plans first.">Regulars</SectionTitle>
       {known.length ? known.map(({ person, count }) => (
         <Card key={person.id} style={styles.listRow}>
-          <Avatar name={person.name} colorIndex={person.colorIndex} />
+          <Avatar name={person.name} colorIndex={person.colorIndex} photoUri={person.photoUri} />
           <View style={styles.flex}>
             <AppText variant="bodyStrong">{person.name}</AppText>
             <AppText variant="small" muted>
@@ -210,11 +240,18 @@ function Divider() {
 const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   bold: { fontWeight: '700' },
-  header: { gap: Spacing.md },
-  headerTop: { flexDirection: 'row', alignItems: 'center', gap: Spacing.lg },
-  name: { fontSize: 24 },
-  verified: { alignSelf: 'flex-start', borderRadius: Radius.pill, paddingHorizontal: 10, paddingVertical: 3, marginTop: 6 },
-  editButton: { alignSelf: 'flex-start' },
+  header: { gap: Spacing.md, paddingVertical: Spacing.sm },
+  headerTop: { flexDirection: 'row', alignItems: 'center', gap: Spacing.md },
+  penButton: {
+    width: 40, height: 40, borderRadius: 20, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center',
+    alignSelf: 'flex-start',
+  },
+  cameraBadge: {
+    position: 'absolute', right: -2, bottom: -2, width: 28, height: 28, borderRadius: 14, borderWidth: 2,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  name: { fontSize: 24, lineHeight: 29 },
+  verified: { alignSelf: 'flex-start', borderRadius: Radius.pill, paddingHorizontal: 10, paddingVertical: 3 },
   stats: { flexDirection: 'row', gap: Spacing.sm },
   stat: { flex: 1, minWidth: 0, borderWidth: 1, borderRadius: Radius.md, paddingVertical: Spacing.md, alignItems: 'center', gap: 2 },
   statValue: { fontSize: 22, fontWeight: '800', fontVariant: ['tabular-nums'] },
